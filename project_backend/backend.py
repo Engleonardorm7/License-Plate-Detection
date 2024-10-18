@@ -12,7 +12,7 @@ def get_db_connection():
     return conn
 
 @app.route('/api/vehicle/<plate>', methods=['GET'])
-def get_vehicle(palte):
+def get_vehicle(plate):
     conn=get_db_connection()
     vehicle = conn.execute('SELECT * FROM vehicles WHERE plate = ?', (plate,)).fetchone()
     conn.close()
@@ -24,7 +24,8 @@ def get_vehicle(palte):
 def add_vehicle():
     new_vehicle = request.json
     conn= get_db_connection()
-    conn.execute('INSERT INTO VEHICLES (plate, image, entry_time) VALUES (?,?,?)', new_vehicle['plate'],new_vehicle['image'], new_vehicle['entry_time'])
+    conn.execute('INSERT INTO vehicles (plate, image, entry_time) VALUES (?, ?, ?)', (new_vehicle['plate'], new_vehicle['image'], new_vehicle['entry_time']))
+
     conn.commit()
     conn.close()
     return jsonify({'status':'success'}),201
@@ -33,7 +34,7 @@ def add_vehicle():
 @app.route('/api/vehicle/<plate>/exit', methods=['POST'])
 def update_exit_time(plate):
     end_time=request.json['end_time']
-    conn = get_db_connection
+    conn = get_db_connection()
 
     vehicle=conn.execute('UPDATE vehicles SET end_time = ? WHERE plate = ?',(end_time,plate))
     conn.close()
@@ -41,11 +42,15 @@ def update_exit_time(plate):
     if vehicle is None:
         return jsonify({'error':'Vehicle not found'}), 404
     
+    conn.execute('UPDATE vehicles SET end_time = ? WHERE plate = ?',(end_time,plate))
+    conn.commit()
+    conn.close()
+
     entri_time=datetime.strptime(vehicle['entry_time'], '%Y-%m-%d %H:%M:%S')
     exit_time = datetime.strptime(end_time, '%Y-%m-%d %H:%M:%S')
-    total_time= (exit_time-entri_time).total_secondes()/3600
+    total_time= (exit_time-entri_time).total_seconds()/3600
 
-    if total_time <= 3600:
+    if total_time <= 1:
         total_cost=2
     else:
         total_cost=total_time*2
