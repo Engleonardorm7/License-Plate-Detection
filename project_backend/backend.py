@@ -33,16 +33,16 @@ def get_vehicle(plate):
 
     return jsonify(vehicle_dict)
     
-@app.route('/api/vehicle', methods = ['POST'])
-def add_vehicle():
-    new_vehicle = request.json
-    conn= get_db_connection()
+# @app.route('/api/vehicle', methods = ['POST'])
+# def add_vehicle():
+#     new_vehicle = request.json
+#     conn= get_db_connection()
 
-    conn.execute('INSERT INTO vehicles (plate, image, entry_time) VALUES (?, ?, ?)', (new_vehicle['plate'], new_vehicle['image'], new_vehicle['entry_time']))
+#     conn.execute('INSERT INTO vehicles (plate, image, entry_time) VALUES (?, ?, ?)', (new_vehicle['plate'], new_vehicle['image'], new_vehicle['entry_time']))
 
-    conn.commit()
-    conn.close()
-    return jsonify({'status':'success'}),201
+#     conn.commit()
+#     conn.close()
+#     return jsonify({'status':'success'}),201
 
 
 @app.route('/api/vehicle/<plate>/exit', methods=['POST'])
