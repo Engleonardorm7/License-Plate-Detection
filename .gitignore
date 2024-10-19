@@ -47,4 +47,11 @@ build/
 .env.local
 .env.development.local
 .env.test.local
+
 .env.production.local
+
+
+
+Car1.jpg
+database.db
+vehicle.py
