@@ -27,7 +27,7 @@ const EntryScreen = ({ onSubmitPlate }) => {
           id="plate"
           value={plateNumber}
           onChange={handleInputChange}
-          placeholder="Ej: SN66 CMZ"
+          placeholder="Ej: SN66CMZ"
         />
         <button onClick={handleSubmit}>Enter</button>
       </div>

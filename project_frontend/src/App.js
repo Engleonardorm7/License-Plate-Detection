@@ -10,11 +10,26 @@ const App = () => {
 
   const handlePlateSubmit = async (plate) => {
     try {
-      const response = await axios.get(
+      // get details
+      console.log(plate);
+      const vehicleResponse = await axios.get(
         `http://127.0.0.1:5000/api/vehicle/${plate}`
       );
+      // update exit time and get the cost
+      const exitResponse = await axios.post(
+        `http://127.0.0.1:5000/api/vehicle/${plate}/exit`,
+        {}
+      );
+
+      const updatedVehicleData = {
+        ...vehicleResponse.data,
+        total_cost: exitResponse.data.total_cost,
+        total_time: exitResponse.data.total_time,
+        end_time: exitResponse.data.end_time,
+      };
+
       setPlateNumber(plate);
-      setVehicleData(response.data);
+      setVehicleData(updatedVehicleData);
       setIsPaymentScreen(true);
     } catch (error) {
       console.error(

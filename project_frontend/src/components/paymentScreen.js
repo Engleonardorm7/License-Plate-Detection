@@ -4,43 +4,56 @@ import axios from "axios";
 const PaymentScreen = ({ plateNumber, vehicleData, onPaymentComplete }) => {
   const [loading, setLoading] = useState(false);
 
-  const handlePayment = async () => {
+  const handlePayment = async (plate) => {
     try {
       setLoading(true);
-      const endTime = new Date().toISOString();
       const response = await axios.post(
-        `http://127.0.0.1:5000/api/vehicle/${plateNumber}/exit`,
-        {
-          end_time: endTime,
-        }
+        `http://127.0.0.1:5000/api/vehicle/${plate}/pay`,
+        {}
       );
-      console.log("Total time:", response.data.total_time);
-      console.log("Total cost", response.data.total_cost);
-      alert(`El costo total es: ${response.data.total_cost}`);
-      onPaymentComplete();
+
+      if (response.status === 200) {
+        setTimeout(() => {
+          alert("Payment completed successfully");
+          onPaymentComplete();
+        }, 1000);
+      } else {
+        alert("Payment failed. Please try again.");
+      }
     } catch (error) {
       console.error(
-        "Error: ",
-        error.response ? error.response.data : error.message
+        "Payment Error: ",
+        error.response ? error.response.data : error
       );
-      alert("Failed Payment");
+      alert("An error occurred during the payment. Please try again.");
     } finally {
       setLoading(false);
     }
   };
+
+  console.log(vehicleData);
   return (
     <div className="payment-screen">
-      <h2>Detalles del Vehículo</h2>
+      <h2>Vehicle Details</h2>
       <div>
-        <img src={vehicleData.image} alt="Vehicle" />
-        <p>Placa: {plateNumber}</p>
-        <p>Hora de entrada: {vehicleData.entry_time}</p>
+        <h1>{vehicleData.plate}</h1>
+        <img
+          src={`http://127.0.0.1:5000/images/${vehicleData.image_path}`}
+          alt={`Image of ${vehicleData.plate}`}
+          style={{ width: "300px", height: "auto" }}
+        />
+
+        <p>License Plate: {plateNumber}</p>
+        <p>Check-in time: {vehicleData.entry_time}</p>
+        <p>End time: {vehicleData.end_time}</p>
+        <p>Total time: {vehicleData.total_time.toFixed(2)} hours</p>
+        <p>Total to pay: {vehicleData.total_cost.toFixed(2)} EUR</p>
       </div>
       <div>
-        <button onClick={handlePayment} disabled={loading}>
-          {loading ? "Procesando..." : "Pagar"}
+        <button onClick={() => handlePayment(plateNumber)} disabled={loading}>
+          {loading ? "Processing..." : "Pay"}
         </button>
-        <button onClick={onPaymentComplete}>Cancelar</button>
+        <button onClick={onPaymentComplete}>Cancel</button>
       </div>
     </div>
   );
