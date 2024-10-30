@@ -51,7 +51,9 @@ build/
 .env.production.local
 
 
-
+papers/
 Car1.jpg
 database.db
-vehicle.py
+
+university.pub
+university
