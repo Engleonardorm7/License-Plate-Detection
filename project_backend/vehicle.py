@@ -68,6 +68,10 @@ Inputs: plate number, and store the picture of the plates in the folder plates a
 plate_number = 'SL593LM'
 'SN66CMZ'
 
+
+# To create the vehicle in the database
 register_vehicle_entry(plate_number)
 
+
+# Allows the vehicle to exit and delete its information
 # vehicle_exit(plate_number)
