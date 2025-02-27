@@ -50,10 +50,16 @@ const PaymentScreen = ({ plateNumber, vehicleData, onPaymentComplete }) => {
         <p>Total to pay: {vehicleData.total_cost.toFixed(2)} EUR</p>
       </div>
       <div>
-        <button onClick={() => handlePayment(plateNumber)} disabled={loading}>
+        <button
+          class="pay"
+          onClick={() => handlePayment(plateNumber)}
+          disabled={loading}
+        >
           {loading ? "Processing..." : "Pay"}
         </button>
-        <button onClick={onPaymentComplete}>Cancel</button>
+        <button class="cancel" onClick={onPaymentComplete}>
+          Cancel
+        </button>
       </div>
     </div>
   );
